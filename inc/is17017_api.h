@@ -61,6 +61,12 @@ bool is17017_vehicle_initialize(bool* ventilation_required, uint32_t timeout_ms)
 bool is17017_check_gun_connection(void);
 
 /**
+ * @brief Check whether the EV gun is connected
+ * @return true if connected
+ */
+bool is17017_check_charger_avalaibiltys(void);
+
+/**
  * @brief Set whether the charger is available for EV
  * @param available true to make charger available
  */

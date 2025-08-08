@@ -92,6 +92,11 @@ bool is17017_check_gun_connection(void)
     return gun_state;
 }
 
+bool is17017_check_charger_avalaibiltys(void)
+{
+    return pwm_state;
+}
+
 bool is17017_is_vehicle_charging(void)
 {
     return charging_state;
