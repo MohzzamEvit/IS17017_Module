@@ -115,6 +115,14 @@ is17017_state_t is17017_get_vehicle_state(void)
 void is17017_set_charging_current(uint8_t current_A)
 {
     pilot_current_limit_A = current_A;
+    
+    if (pwm_state == IS17017_PWM_ENABLED)
+    {
+      float duty_cycle = 0;
+      
+      duty_cycle = calculate_pwm_duty_from_current(pilot_current_limit_A);
+      is17017_set_pwm(duty_cycle);
+    }
 }
 
 void is17017_set_charger_availability(bool available)
