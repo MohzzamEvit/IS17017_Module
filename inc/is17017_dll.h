@@ -22,6 +22,11 @@ typedef enum {
  */
 void is17017_set_pwm(float duty_percent);
 
+// ----------------------------------------------------
+// Wrapper to read CP voltage (pilot signal)
+// ----------------------------------------------------
+float is17017_get_cp_voltage(void);
+
 /**
  * @brief Get the current vehicle state (State A/B/C/D/E)
  * @return IEC 61851 state code (0 = A, 1 = B, ...)

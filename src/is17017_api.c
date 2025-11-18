@@ -57,34 +57,17 @@ void is17017_state_flow(void)
     
 }
 
-bool is17017_vehicle_initialize(bool *ventilation_required, uint32_t timeout_ms)
+bool is17017_vehicle_initialize(bool *ventilation_required)
 {
-    uint32_t tick_time = 0;
-
-    tick_time = get_ms_tick();
-
-    while ((get_ms_tick() - tick_time) < timeout_ms)
-    {
-        is17017_state_flow();
-
-        if (gun_state == IS17017_GUN_DISCONNECTED)
-        {
-            return false;
-        }
-
-        if (fault_status == IS17017_FAULT_PRESENT)
-        {
-            return false;
-        }
-
-        if (charging_state == IS17017_CHARGING_ACTIVE)
-        {
-            *ventilation_required = ventilation_status;
-            return true;
-        }
-    }
-
-    return false;
+  is17017_state_flow();
+  
+  if (charging_state == IS17017_CHARGING_ACTIVE)
+  {
+    *ventilation_required = ventilation_status;
+    return true;
+  }
+  
+  return false;
 }
 
 bool is17017_check_gun_connection(void)
@@ -157,6 +140,12 @@ void iec61851_prev_state_a(is17017_state_t curr_state)
     case IS17017_STATE_C:
     case IS17017_STATE_D:
         gun_state = IS17017_GUN_CONNECTED; // seq 1.2
+        charging_state = IS17017_CHARGING_ACTIVE; 
+        
+        if (curr_state == IS17017_STATE_D)
+        {
+          ventilation_status = IS17017_VENTILATION_REQUIRED;
+        }
         break;
 
     case IS17017_STATE_E:
@@ -250,3 +239,4 @@ static float calculate_pwm_duty_from_current(uint8_t current_limit_A)
 {
     return (current_limit_A * 10 / 6.0);
 }
+

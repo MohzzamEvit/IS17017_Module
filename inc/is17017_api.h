@@ -51,7 +51,7 @@ typedef enum
  * @return true  if vehicle is detected (pilot in valid state B, C, or D)
  * @return false if no vehicle is detected within the timeout or pilot is in fault/invalid state
  */
-bool is17017_vehicle_initialize(bool* ventilation_required, uint32_t timeout_ms);
+bool is17017_vehicle_initialize(bool* ventilation_required);
 
 
 /**

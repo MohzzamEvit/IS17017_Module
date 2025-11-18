@@ -44,6 +44,14 @@ void is17017_set_pwm(float duty_percent)
 //    return curr_state;
 //}
 
+// ----------------------------------------------------
+// Wrapper to read CP voltage (pilot signal)
+// ----------------------------------------------------
+float is17017_get_cp_voltage(void)
+{
+  return get_cp_voltage();   // your original function
+}
+
 is17017_state_t is17017_get_state(void)
 {
   float pilot_voltage = get_cp_voltage();
