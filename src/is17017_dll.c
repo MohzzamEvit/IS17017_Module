@@ -58,6 +58,7 @@ is17017_state_t is17017_get_state(void)
   static is17017_state_t curr_state = IS17017_STATE_A;
   static is17017_state_t temp_state = IS17017_STATE_A;
   static uint32_t state_start_time = 0;
+  bool not_in_range_flag = false;
   
   is17017_state_t new_state = IS17017_STATE_A;
   
@@ -74,20 +75,25 @@ is17017_state_t is17017_get_state(void)
     new_state = IS17017_STATE_E;
   else if ((pilot_voltage >= 0) && (pilot_voltage < 1))
     new_state = IS17017_STATE_F;
+  else 
+    not_in_range_flag = true;
   
-  // If new state is different from temp_state, reset timer and update temp_state
-  if (new_state != temp_state)
+  if (!not_in_range_flag)
   {
-    temp_state = new_state;
-    state_start_time = get_ms_tick(); // Start timing
-  }
-  
-  // If temp_state remains stable for 2 seconds, accept it as current state
-  if ((get_ms_tick() - state_start_time) >= 500)
-  {
-    if (curr_state != temp_state)
+    // If new state is different from temp_state, reset timer and update temp_state
+    if (new_state != temp_state)
     {
-      curr_state = temp_state;
+      temp_state = new_state;
+      state_start_time = get_ms_tick(); // Start timing
+    }
+    
+    // If temp_state remains stable for 2 seconds, accept it as current state
+    if ((get_ms_tick() - state_start_time) >= 500)
+    {
+      if (curr_state != temp_state)
+      {
+        curr_state = temp_state;
+      }
     }
   }
   
