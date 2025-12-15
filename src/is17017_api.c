@@ -237,6 +237,57 @@ void iec61851_prev_state_ef(is17017_state_t curr_state)
 
 static float calculate_pwm_duty_from_current(uint8_t current_limit_A)
 {
-    return (current_limit_A * 10 / 6.0);
+  float duty;
+  
+  /* ===============================
+  * 0 A ? No current allowed
+  * =============================== */
+  if (current_limit_A == 0)
+  {
+    return IEC_PWM_NO_CURRENT;
+  }
+  
+  /* ===============================
+  * Enforce IEC current limits
+  * =============================== */
+  if (current_limit_A < IEC_MIN_CURRENT_A)
+  {
+    current_limit_A = IEC_MIN_CURRENT_A;
+  }
+  else if (current_limit_A > IEC_MAX_CURRENT_A)
+  {
+    current_limit_A = IEC_MAX_CURRENT_A;
+  }
+  
+  /* ===============================
+  * IEC linear region (10–85%)
+  * I = Duty × 0.6
+  * =============================== */
+  if (current_limit_A <= (IEC_PWM_LINEAR_MAX * IEC_PWM_SLOPE_LINEAR))
+  {
+    duty = current_limit_A / IEC_PWM_SLOPE_LINEAR;
+  }
+  /* ===============================
+  * IEC high current region (85–96%)
+  * I = (Duty - 64) × 2.5
+  * =============================== */
+  else
+  {
+    duty = (current_limit_A / IEC_PWM_SLOPE_HIGH) + IEC_PWM_HIGH_OFFSET;
+  }
+  
+  /* ===============================
+  * Clamp to valid IEC range
+  * =============================== */
+  if (duty < IEC_PWM_MIN_ACTIVE)
+  {
+    duty = IEC_PWM_MIN_ACTIVE;
+  }
+  else if (duty > IEC_PWM_MAX_ACTIVE)
+  {
+    duty = IEC_PWM_MAX_ACTIVE;
+  }
+  
+  return duty;
 }
 

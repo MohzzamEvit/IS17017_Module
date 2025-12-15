@@ -6,6 +6,33 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* ===============================
+ * IEC 61851 – Current limits
+ * =============================== */
+#define IEC_MIN_CURRENT_A        6
+#define IEC_MAX_CURRENT_A        80
+
+/* ===============================
+ * IEC 61851 – PWM duty limits (%)
+ * =============================== */
+#define IEC_PWM_NO_CURRENT       7.5f    /* 7–8% : No current allowed */
+#define IEC_PWM_MIN_ACTIVE       10.0f   /* ≥10% : Current allowed */
+#define IEC_PWM_MAX_ACTIVE       96.0f   /* ≤96% : Max valid */
+
+/* ===============================
+ * IEC 61851 – Region boundaries
+ * =============================== */
+#define IEC_PWM_LINEAR_MAX       85.0f   /* 10–85% : I = D × 0.6 */
+#define IEC_PWM_HIGH_MIN         85.0f   /* >85% */
+#define IEC_PWM_HIGH_MAX         96.0f   /* ≤96% */
+
+/* ===============================
+ * IEC 61851 – Slopes
+ * =============================== */
+#define IEC_PWM_SLOPE_LINEAR     0.6f    /* A per % */
+#define IEC_PWM_SLOPE_HIGH       2.5f    /* A per % */
+#define IEC_PWM_HIGH_OFFSET      64.0f   /* IEC defined offset */
+
 typedef enum
 {
     IS17017_PWM_DISABLED = 0,         // 12V DC → State A (No PWM, no vehicle)
